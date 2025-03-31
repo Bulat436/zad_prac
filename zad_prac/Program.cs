@@ -8,30 +8,48 @@ namespace zad_prac
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Console.WriteLine("Введите строку:");
             string row = Console.ReadLine();
 
             string result;
-
-            if (row.Length % 2 == 0)
+            if (LowercaseEnglish(row))
             {
-                int mid = row.Length / 2;
-                string firsthalf = row.Substring(0, mid);
-                string secondhalf = row.Substring(mid);
-                string reversfirsthalf = new string(firsthalf.Reverse().ToArray());
-                string reverssecondhalf = new string(secondhalf.Reverse().ToArray());
-                result = reversfirsthalf + reverssecondhalf;
+
+
+                if (row.Length % 2 == 0)
+                {
+                    int mid = row.Length / 2;
+                    string firsthalf = row.Substring(0, mid);
+                    string secondhalf = row.Substring(mid);
+                    string reversfirsthalf = new string(firsthalf.Reverse().ToArray());
+                    string reverssecondhalf = new string(secondhalf.Reverse().ToArray());
+                    result = reversfirsthalf + reverssecondhalf;
+                }
+                else
+                {
+                    string reversed = new string(row.Reverse().ToArray());
+                    result = reversed + row;
+                }
+                Console.WriteLine("Обработанная строка:");
+                Console.WriteLine(result);
             }
             else
             {
-                string reversed = new string(row.Reverse().ToArray());
-                result = reversed + row;
+                Console.WriteLine("Неправильный ввод");
             }
-
-            Console.WriteLine("Обработанная строка:");
-            Console.WriteLine(result);
+        }
+        static bool LowercaseEnglish(string row)
+        {
+            foreach (char c in row)
+            {
+                if (c < 'a' || c > 'z')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
