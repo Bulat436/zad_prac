@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace zad_prac
 {
@@ -12,6 +13,8 @@ namespace zad_prac
         {
             Console.WriteLine("Введите строку:");
             string row = Console.ReadLine();
+            Console.WriteLine("Выберие тип сортировки: Quicksort or Tree sort");
+            int index = Convert.ToInt32(Console.ReadLine());
 
             string result;
             if (LowercaseEnglish(row))
@@ -56,6 +59,27 @@ namespace zad_prac
                 string subs = LongestSubstring(result);
                 Console.WriteLine("Самая длинная подстрока:");
                 Console.WriteLine(subs);
+                if (index < 2)
+                {
+                    char[] chars = result.ToCharArray();
+                    QuickSort(chars, 0, chars.Length - 1);
+                    string sorted = new string(chars);
+                    Console.WriteLine("Сортировка строки методом Quicksort");
+                    Console.WriteLine(sorted);
+                }
+                else
+                {
+                    Node root = null;
+                    foreach (char c in result)
+                    {
+                        root = Insert(root, c);
+                    }
+
+                    StringBuilder sorted1 = new StringBuilder();
+                    InOrderTraversal(root, sorted1);
+                    Console.WriteLine("Сортировка строки метоом Tree sort");
+                    Console.WriteLine(sorted1.ToString());
+                }
             }
             else
             {
@@ -102,6 +126,70 @@ namespace zad_prac
             }
             return longestSubstring;
 
+        }
+        static void QuickSort(char[] arr, int left, int right)
+        {
+            if (left >= right)
+                return;
+
+            int pivotIndex = Partition(arr, left, right);
+            QuickSort(arr, left, pivotIndex - 1);
+            QuickSort(arr, pivotIndex + 1, right);
+        }
+        static int Partition(char[] arr, int left, int right)
+        {
+            char pivot = arr[right];
+            int i = left - 1;
+
+            for (int j = left; j < right; j++)
+            {
+                if (arr[j] < pivot)
+                {
+                    i++;
+                    Swap(arr, i, j);
+                }
+            }
+
+            Swap(arr, i + 1, right);
+            return i + 1;
+        }
+        static void Swap(char[] arr, int i, int j)
+        {
+            char temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+        class Node
+        {
+            public char Data;
+            public Node Left, Right;
+
+            public Node(char data)
+            {
+                Data = data;
+                Left = Right = null;
+            }
+        }
+        static Node Insert(Node root, char data)
+        {
+            if (root == null)
+                return new Node(data);
+
+            if (data < root.Data)
+                root.Left = Insert(root.Left, data);
+            else
+                root.Right = Insert(root.Right, data);
+
+            return root;
+        }
+        static void InOrderTraversal(Node root, StringBuilder result)
+        {
+            if (root == null)
+                return;
+
+            InOrderTraversal(root.Left, result);
+            result.Append(root.Data);
+            InOrderTraversal(root.Right, result);
         }
     }
 }
