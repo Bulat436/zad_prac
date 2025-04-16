@@ -39,6 +39,24 @@ namespace zad_prac
             {
                 Console.WriteLine("Неправильный ввод");
             }
+            Dictionary<char, int> letterCount = new Dictionary<char, int>();
+
+            foreach (char c in row)
+            {
+                if (letterCount.ContainsKey(c))
+                {
+                    letterCount[c]++;
+                }
+                else
+                {
+                    letterCount[c] = 1;
+                }
+            }
+            Console.WriteLine("Количество каждой буквы:");
+            foreach (var item in letterCount)
+            {
+                Console.WriteLine($"{item.Key}: {item.Value}");
+            }
         }
         static bool LowercaseEnglish(string row)
         {
