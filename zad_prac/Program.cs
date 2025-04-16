@@ -53,6 +53,9 @@ namespace zad_prac
                 {
                     Console.WriteLine($"{item.Key}: {item.Value}");
                 }
+                string subs = LongestSubstring(result);
+                Console.WriteLine("Самая длинная подстрока:");
+                Console.WriteLine(subs);
             }
             else
             {
