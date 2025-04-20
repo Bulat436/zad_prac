@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -9,7 +10,7 @@ namespace zad_prac
 {
     class Program
     {
-        static void Main()
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Введите строку:");
             string row = Console.ReadLine();
@@ -80,6 +81,14 @@ namespace zad_prac
                     Console.WriteLine("Сортировка строки метоом Tree sort");
                     Console.WriteLine(sorted1.ToString());
                 }
+                int? randomPosition = await GetRandomNumberFromApiAsync(result.Length);
+
+                int pos = randomPosition ?? RandomNumberLoc(result.Length);
+
+                string newresult = result.Remove(pos, 1);
+
+                Console.WriteLine("Результат после удаления символа:");
+                Console.WriteLine(newresult);
             }
             else
             {
@@ -190,6 +199,39 @@ namespace zad_prac
             InOrderTraversal(root.Left, result);
             result.Append(root.Data);
             InOrderTraversal(root.Right, result);
+        }
+        static readonly HttpClient client = new HttpClient();
+
+        static async Task<int?> GetRandomNumberFromApiAsync(int maxExclusive)
+        {
+            try
+            {
+                string url = $"https://www.randomnumberapi.com/api/v1.0/random?min=0&max={maxExclusive - 1}&count=1";
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                responseBody = responseBody.Trim(new char[] { '[', ']', ' ', '\n', '\r' });
+                if (int.TryParse(responseBody, out int number))
+                {
+                    return number;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        static int RandomNumberLoc(int maxExclusive)
+        {
+            var rnd = new Random();
+            return rnd.Next(maxExclusive);
         }
     }
 }
